@@ -1,0 +1,50 @@
+{% extends "reports/base.html" %}
+{% block content %}
+<div class="container">
+  <h3 class="mt-3">QA Dashboard — Pending Drafts</h3>
+  <p>Logged in as: {{ user_display }}</p>
+
+  <table class="table table-striped mt-2">
+    <thead>
+      <tr>
+        <th>ID</th><th>Study ID</th><th>Region</th><th>Site</th><th>Product</th><th>Start</th><th>End</th><th>Actions</th>
+      </tr>
+    </thead>
+    <tbody>
+      {% for d in drafts %}
+      <tr>
+        <td>{{ d.id }}</td>
+        <td>{{ d.study_id }}</td>
+        <td>{{ d.region }}</td>
+        <td>{{ d.site }}</td>
+        <td>{{ d.product }}</td>
+        <td>{{ d.start_date }}</td>
+        <td>{{ d.end_date }}</td>
+        <td>
+          <a class="btn btn-sm btn-primary" href="{% url 'qa:draft_detail' d.id %}">Review</a>
+        </td>
+      </tr>
+      {% empty %}
+      <tr><td colspan="8">No draft reports pending.</td></tr>
+      {% endfor %}
+    </tbody>
+  </table>
+
+  <!-- Pagination -->
+  <nav aria-label="Page navigation">
+    <ul class="pagination">
+      {% if page_obj.has_previous %}
+      <li class="page-item">
+        <a class="page-link" href="?page={{ page_obj.previous_page_number }}">Previous</a>
+      </li>
+      {% endif %}
+      <li class="page-item disabled"><span class="page-link">Page {{ page_obj.number }} of {{ paginator.num_pages }}</span></li>
+      {% if page_obj.has_next %}
+      <li class="page-item">
+        <a class="page-link" href="?page={{ page_obj.next_page_number }}">Next</a>
+      </li>
+      {% endif %}
+    </ul>
+  </nav>
+</div>
+{% endblock %}

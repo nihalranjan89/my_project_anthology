@@ -1,0 +1,116 @@
+{% extends "reports/base.html" %}
+{% block content %}
+<div class="container">
+  <a href="{% url 'qa:dashboard' %}" class="btn btn-link">&laquo; Back to Dashboard</a>
+  <h4>Draft Report #{{ draft.id }} — {{ draft.filename }}</h4>
+
+  <div class="row mt-3">
+    <div class="col-md-8">
+      <div class="card">
+        <div class="card-header">Report PDF</div>
+        <div class="card-body" style="height:600px;">
+          {% if pdf_url %}
+            <iframe src="{{ pdf_url }}" width="100%" height="100%"></iframe>
+          {% else %}
+            <p>Document unavailable.</p>
+          {% endif %}
+        </div>
+      </div>
+    </div>
+
+    <div class="col-md-4">
+      <div class="card mb-3">
+        <div class="card-header">Metadata</div>
+        <div class="card-body">
+          <p><strong>Region:</strong> {{ draft.region }}</p>
+          <p><strong>Site:</strong> {{ draft.site }}</p>
+          <p><strong>Product:</strong> {{ draft.product }}</p>
+          <p><strong>Start:</strong> {{ draft.start_date }} </p>
+          <p><strong>End:</strong> {{ draft.end_date }} </p>
+        </div>
+      </div>
+
+      <div class="card mb-3">
+        <div class="card-header">Recipients</div>
+        <div class="card-body">
+          <h6>Site members</h6>
+          <ul id="site-members">
+            {% for s in site_members %}
+              <li>{{ s }}</li>
+            {% empty %}
+              <li><em>No site members found</em></li>
+            {% endfor %}
+          </ul>
+
+          <h6>Region members</h6>
+          <ul id="region-members">
+            {% for r in region_members %}
+              <li>{{ r }}</li>
+            {% empty %}
+              <li><em>No region members found</em></li>
+            {% endfor %}
+          </ul>
+
+          <h6>Manual recipients</h6>
+          <ul id="manual-list">
+            {% for m in manual_recipients %}
+              <li>{{ m }}</li>
+            {% empty %}
+              <li><em>No manual recipients</em></li>
+            {% endfor %}
+          </ul>
+
+          <div class="mt-2">
+            <input id="manual-email" class="form-control" placeholder="Add email"/>
+            <button id="add-manual" class="btn btn-sm btn-outline-primary mt-2">Add</button>
+          </div>
+        </div>
+      </div>
+
+      <div class="d-grid gap-2">
+        <button id="pass-btn" class="btn btn-success">Mark Pass</button>
+        <button id="fail-btn" class="btn btn-danger">Mark Fail</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script>
+function gatherManuals(){
+  const lis = document.querySelectorAll("#manual-list li");
+  return Array.from(lis).map(n => n.innerText).filter(x => x.includes("@"));
+}
+
+document.getElementById("add-manual").addEventListener("click", ()=>{
+  var v = document.getElementById("manual-email").value.trim();
+  if(!v || !v.includes("@")){ alert("Enter valid email"); return;}
+  const ul = document.getElementById("manual-list");
+  const li = document.createElement("li"); li.innerText = v;
+  ul.appendChild(li);
+  document.getElementById("manual-email").value = "";
+});
+
+function doApprove(decision){
+  const csrf = "{{ csrf_token }}";
+  const manuals = gatherManuals();
+  const form = new FormData();
+  form.append("decision", decision);
+  manuals.forEach(m => form.append("manual_emails[]", m));
+  fetch("{% url 'qa:approve_draft' draft.id %}", {
+    method: "POST",
+    headers: {"X-CSRFToken": csrf},
+    body: form
+  }).then(r => r.json()).then(j => {
+    if(j.error){
+      alert("Error: "+j.error);
+    } else {
+      alert("Result: " + JSON.stringify(j));
+      window.location.href = "{% url 'qa:dashboard' %}";
+    }
+  }).catch(e => alert("Error: " + e));
+}
+
+document.getElementById("pass-btn").addEventListener("click", ()=>doApprove("pass"));
+document.getElementById("fail-btn").addEventListener("click", ()=>doApprove("fail"));
+</script>
+{% endblock %}
