@@ -17,10 +17,10 @@ Including another URLconf
 
 from django.contrib import admin
 from django.urls import path, include
-from django.shortcuts import redirect
 
 urlpatterns = [
     path("admin/", admin.site.urls),
-    path("qa/", include(("reports.urls.qa_urls", "qa"), namespace="qa")),
-    path("", lambda request: redirect("qa:dashboard")),  # ✅ redirect root → QA Dashboard
+    path("qa/", include("reports.urls.qa_urls")),
+    path("accounts/", include("django.contrib.auth.urls")),  # ← enables login/logout
 ]
+

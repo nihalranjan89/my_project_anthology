@@ -90,7 +90,7 @@ DATABASES = {
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.mysql',
-        'NAME': 'document_review_system',  
+        'NAME': 'anthology_db',  
         'USER': 'root',                    
         'PASSWORD': 'root123',
         'HOST': 'localhost',
