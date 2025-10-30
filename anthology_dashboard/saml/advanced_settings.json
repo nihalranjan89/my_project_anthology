@@ -1,0 +1,24 @@
+{
+    "security": {
+        "authnRequestsSigned": false,
+        "logoutRequestSigned": false,
+        "logoutResponseSigned": false,
+        "wantMessagesSigned": false,
+        "wantAssertionsSigned": true,
+        "wantNameId": true,
+        "wantAttributeStatement": true
+    },
+    "contactPerson": {
+        "technical": {
+            "givenName": "Support",
+            "emailAddress": "support@pg.com"
+        }
+    },
+    "organization": {
+        "en-US": {
+            "name": "Anthology Dashboard",
+            "displayname": "Anthology Dashboard",
+            "url": "https://RGM-APP-CUDA01.eu.pg.com/anthology/"
+        }
+    }
+}

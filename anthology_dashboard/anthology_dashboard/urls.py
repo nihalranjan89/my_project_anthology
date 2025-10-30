@@ -17,10 +17,16 @@ Including another URLconf
 
 from django.contrib import admin
 from django.urls import path, include
+from reports.views import sso_views
 
 urlpatterns = [
     path("admin/", admin.site.urls),
     path("qa/", include("reports.urls.qa_urls")),
     path("accounts/", include("django.contrib.auth.urls")),  # ← enables login/logout
+
+        # SAML SSO
+    path("anthology/init_login/", sso_views.login_saml, name="login_saml"),   # initiate login
+    path("anthology/login_saml/", sso_views.acs, name="acs"),                # callback
+    path("anthology/metadata/", sso_views.metadata, name="metadata"),        # optional metadata
 ]
 

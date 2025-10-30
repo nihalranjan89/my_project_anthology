@@ -4,3 +4,4 @@ django-environ>=0.10.0
 pytest
 pytest-django
 python-dotenv
+python3-saml

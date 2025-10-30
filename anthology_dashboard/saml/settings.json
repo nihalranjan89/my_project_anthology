@@ -1,0 +1,20 @@
+{
+    "strict": true,
+    "debug": true,
+    "sp": {
+        "entityId": "https://RGM-APP-CUDA01.eu.pg.com/anthology/metadata/",
+        "assertionConsumerService": {
+            "url": "https://RGM-APP-CUDA01.eu.pg.com/anthology/login_saml/",
+            "binding": "urn:oasis:names:tc:SAML:2.0:bindings:HTTP-POST"
+        },
+        "singleLogoutService": {
+            "url": "https://RGM-APP-CUDA01.eu.pg.com/anthology/logout/",
+            "binding": "urn:oasis:names:tc:SAML:2.0:bindings:HTTP-Redirect"
+        },
+        "x509cert": "",
+        "privateKey": ""
+    },
+    "idp": {
+        "xml": "idp_metadata.xml"
+    }
+}
